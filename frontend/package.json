@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@emotion/unitless": "^0.7.3",
+    "axios": "^0.18.0",
     "grommet": "^2.6.5",
     "grommet-icons": "^4.2.0",
     "react": "^16.8.6",

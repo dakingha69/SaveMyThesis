@@ -16,6 +16,7 @@ const HistoryItem = ({ commitTitle, timestamp, author, onClick }) => {
       className='pointer'
       direction='row'
       onClick={() => onClick()}
+      flex={false}
     >
       <Box
         fill='vertical'
@@ -24,7 +25,8 @@ const HistoryItem = ({ commitTitle, timestamp, author, onClick }) => {
           color: 'dark-3'
         }}
         justify='center'
-      >
+        height='small'
+        >
         <Box
           style={{
             backgroundColor: 'white',

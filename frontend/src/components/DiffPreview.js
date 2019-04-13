@@ -1,31 +1,35 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Heading, Paragraph } from 'grommet';
+import { Box, Heading, Paragraph, Text } from 'grommet';
 import ReactDiffViewer from 'react-diff-viewer';
 import ReactLoading from 'react-loading';
 
-const mockVersion = {
-  commitTitle: 'Add hello world!',
-  commitText: 'Add new paragraph with hello world. Bla bla.',
-  oldText: 'I am OLD',
-  newText: 'I am NEW'
-}
+import { fetchVersion } from '../services/versionService';
 
-const DiffPreview = ({ versionId }) => {
+const DiffPreview = ({ versionId, previousVersionId }) => {
   const [ fetching, setFetching ] = useState(true)
-  const [ version, setVersion ] = useState({
-    commitText: '',
-    commitTitle: '',
-    oldText: '',
-    newText: ''
-  })
+  const [ activeVersion, setActiveVersion ] = useState({})
+  const [ previousVersion, setPreviousVersion ] = useState({})
+
+  const fetchActiveVersion = async () => {
+    setFetching(true)
+    const fetchedActiveVersion = await fetchVersion(versionId)
+    setActiveVersion(fetchedActiveVersion)
+    setFetching(false)
+  }
+
+  const fetchPreviousVersion = async () => {
+    setFetching(true)
+    const fetchedPreviousVersion = previousVersionId
+      ? await fetchVersion(previousVersionId)
+      : {}
+    setPreviousVersion(fetchedPreviousVersion)
+    setFetching(false)
+  }
 
   useEffect(() => {
-    setTimeout(() => {
-      // Mock http request
-      setVersion(mockVersion)
-      setFetching(false)
-    }, 2000)
-  })
+    fetchActiveVersion()
+    fetchPreviousVersion()
+  }, [versionId, previousVersionId])
 
   return (
     <Box
@@ -55,12 +59,16 @@ const DiffPreview = ({ versionId }) => {
           overflow='scroll'
         >
           <Heading level={3}>
-            {`v${versionId} - ${version.commitTitle}`}
+            {activeVersion.commitTitle}
+            <Text weight='normal'>
+              {` - ${new Date(activeVersion.timestamp).toDateString()} by ${activeVersion.author}`}
+            </Text>
           </Heading>
-          <Paragraph>{version.commitText}</Paragraph>
+          <Text>{activeVersion.commitText}</Text>
+          <Paragraph />
           <ReactDiffViewer
-            oldValue={version.oldText}
-            newValue={version.newText}
+            oldValue={previousVersion.text}
+            newValue={activeVersion.text}
           />
         </Box>
       )}

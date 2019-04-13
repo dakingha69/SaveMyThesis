@@ -26,13 +26,13 @@ const History = ({ history, onClickItem }) => {
             author={'You'}
             onClick={() => onClickItem(null)}
           />
-          {history.map(({ id, commitTitle, timestamp, author }) => (
+          {history.map(({ _id, commitTitle, timestamp, author }) => (
             <HistoryItem
-              key={id}
+              key={_id}
               commitTitle={commitTitle}
               timestamp={timestamp}
               author={author}
-              onClick={() => onClickItem(id)}
+              onClick={() => onClickItem(_id)}
             />
           ))}
         </Box>
